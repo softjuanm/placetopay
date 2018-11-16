@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Library\PlaceToPay as PlaceToPay;
 
 /**
  * Payments Controller
@@ -19,10 +20,23 @@ class Payments extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index ()
+    public function index (PlaceToPay $client)
     {
-        $title = 'Bienvenido a PlaceToPay';
-        return view('index', compact('title'));
+        $title = 'PlaceToPay - Formulario de Pago';
+        
+        $banks = $client->getBanksList();
+        $docsType = config('placetopay.documentTypes');
+        $bankInterfaces = config('placetopay.bankInterfaces');
+        $transaction = $client->getTransaction();
+                
+        return view('payments.form', compact('title', 'banks' ,'docsType', 'bankInterfaces', 'transaction'));
     }
+    
+    public function process(Request $request, PlaceToPay $client)
+    {
+        // Process
+        $result  = $client->processPayment($request);
+    }
+    
     
 }

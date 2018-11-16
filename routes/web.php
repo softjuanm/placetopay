@@ -12,4 +12,21 @@
 */
 
 // Index route
-Route::get('/', 'Payments@index');
+Route::get('/', function () {
+    return view('index');
+})->name('home');
+
+// Payment routes group
+Route::group(['as' => 'payment::', 'prefix' => 'payment'], function () {
+
+    Route::get('/', array(
+        'as' => 'index',
+        'uses' => 'Payments@index'
+    ));
+    
+    Route::post('/process', array(
+        'as' => 'process',
+        'uses' => 'Payments@process'
+    ));
+
+});
