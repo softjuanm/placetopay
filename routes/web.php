@@ -39,5 +39,9 @@ Route::group(['as' => 'payment::', 'prefix' => 'payment'], function () {
         'uses' => 'Payments@resume'
     ));
     
-
+    Route::get('/update/{id}', array(
+        'as' => 'update',
+        'uses' => 'Payments@update'
+    ));
+    
 });

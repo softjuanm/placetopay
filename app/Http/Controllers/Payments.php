@@ -65,7 +65,7 @@ class Payments extends Controller {
      * Shows transaction status using transaction ID
      * 
      * @param PlaceToPay $client
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirectore
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function processResult(PlaceToPay $client) {
         // Set page title
@@ -94,5 +94,18 @@ class Payments extends Controller {
         $transactions = Transactions::orderBy('created_at', 'desc')->paginate(15);
         return view('payments.resume', compact('title', 'transactions'));
     }
-
+    
+    /**
+     * Update transaction status and return to resume
+     * @param PlaceToPay $client
+     * @param int $transaction_id
+     * @return \Illuminate\Routing\Redirectore
+     */    
+    public function update(PlaceToPay $client, $transaction_id = null)
+    {
+        if($transaction_id){
+            $client->getTransaction($transaction_id);
+        }
+        return redirect()->route('payment::resume');
+    }
 }

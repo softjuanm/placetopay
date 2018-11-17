@@ -20,6 +20,7 @@
                     <th scope="col">Codigo</th>
                     <th scope="col">Respuesta</th>
                     <th scope="col">Fecha</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +32,7 @@
                     <td>{{ $transaction->responseReasonCode }}</td>
                     <td>{{ $transaction->responseReasonText }}</td>
                     <td>{{ $transaction->updated_at }}</td>
+                    <td><a class="btn btn-dark" href="{{ route('payment::update',['id' => $transaction->transactionID]) }}">Actualizar</a></td>
                 </tr>
                 @endforeach
             </tbody>
