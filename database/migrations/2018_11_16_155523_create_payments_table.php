@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 /**
  * Payment History Migration
+ * Base table
  * @author Juan Manuel Pinzon <softjuanm@gmail.com>
  * @version 0.1
  */

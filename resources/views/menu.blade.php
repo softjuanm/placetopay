@@ -11,7 +11,7 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown">Pagos</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                         <a class="dropdown-item" href="{{ route('payment::index') }}">Nuevo Pago</a>
-                                        <a class="dropdown-item" href="#">Historial de Pagos</a>
+                                        <a class="dropdown-item" href="{{ route('payment::resume') }}">Historial de Pagos</a>
                                     </div>
                                 </li>
                             </ul>

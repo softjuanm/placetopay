@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @author Juan Manuel Pinzon <softjuanm@gmail.com>
  * @version 0.1
  */
-class Transactions extends Model
-{
+class Transactions extends Model {
+
     /**
      * The database table used by the model.
      *
@@ -30,6 +30,18 @@ class Transactions extends Model
      *
      * @var array
      */
-    protected $fillable = ['returnCode', 'bankURL', 'trazabilityCode', 'transactionCycle', 'transactionID','sessionID','bankCurrency','bankFactor','responseCode'];
+    protected $fillable = [
+        'returnCode',
+        'bankURL',
+        'trazabilityCode',
+        'transactionCycle',
+        'transactionID',
+        'sessionID',
+        'bankCurrency',
+        'bankFactor',
+        'responseCode',
+        'responseReasonCode',
+        'responseReasonText',
+    ];
 
 }

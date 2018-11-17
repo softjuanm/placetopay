@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Session;
 use Illuminate\Http\Request;
+use App\Transactions as Transactions;
 use App\Library\PlaceToPay as PlaceToPay;
 
 /**
@@ -13,61 +14,85 @@ use App\Library\PlaceToPay as PlaceToPay;
  * @version 0.1
  *
  */
-class Payments extends Controller
-{
+class Payments extends Controller {
 
     /**
-     * Shows index page
+     * Shows transaction form
      *
      * @return \Illuminate\View\View
      */
-    public function index (PlaceToPay $client)
-    {
+    public function index(PlaceToPay $client) {
+        // Set Page title
         $title = 'PlaceToPay - Formulario de Pago';
-        
+
+        // Retrieve bank list and default transaction from Library
         $banks = $client->getBanksList();
+        $transaction = $client::transaction();
+
+        // Retrieve allowed values form config
         $docsType = config('placetopay.documentTypes');
         $bankInterfaces = config('placetopay.bankInterfaces');
-        $transaction = $client::transaction();
-                
-        return view('payments.form', compact('title', 'banks' ,'docsType', 'bankInterfaces', 'transaction'));
+
+        return view('payments.form', compact('title', 'banks', 'docsType', 'bankInterfaces', 'transaction'));
     }
-    
-    public function process(Request $request, PlaceToPay $client)
-    {
-        
-        // Validation
-        
-        // Process
-        $result  = $client->processPayment($request);
-        
-        if($result->returnCode == 'SUCCESS'){
-           Session::put('transactionId', $result->transactionID);
-           return redirect($result->bankURL);
+
+    /**
+     * Given post form it generates a new transaction
+     * If data is correct, user is redirected to PSE
+     * 
+     * @param Request $request
+     * @param PlaceToPay $client
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function process(Request $request, PlaceToPay $client) {
+       
+        // TODO Request Validation
+       
+        // Process transaction using library
+        $result = $client->processPayment($request);
+
+        if ($result->returnCode == 'SUCCESS') {
+            Session::put('transactionId', $result->transactionID);
+            // Redirec to to bank cosumer page
+            return redirect($result->bankURL);
         }
-        
-        // Final redirect
+
+        // Redirect to form
         return redirect()->route('payment::index');
-        
     }
-    
-    public function processResult(Request $request, PlaceToPay $client)
-    {
+
+    /**
+     * Shows transaction status using transaction ID
+     * 
+     * @param PlaceToPay $client
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirectore
+     */
+    public function processResult(PlaceToPay $client) {
+        // Set page title
         $title = 'Resultado de la operacion';
 
+        // Recover last transactionID from Session
         $transactionId = Session::pull('transactionId');
-        
-        //$transaction = $client->getTransaction($transactionId);
-        
-        print "<pre>";
-        print_r($request->all());
-        print "</pre>";
-        
-        print "<pre>";
-        print_r($transactionId);
-        print "</pre>";
-        
+
+        if ($transactionId) {
+            $transaction = $client->getTransaction($transactionId);
+            return view('payments.result', compact('title', 'transaction'));
+        } else {
+            return redirect()->route('payment::resume');
+        }
     }
-    
-    
+
+    /**
+     * Show a history of transactions done
+     * @return \Illuminate\View\View
+     */
+    public function resume() {
+        // Set page title
+        $title = "Historial de Transacciones";
+
+        // Retrieve records from database model
+        $transactions = Transactions::orderBy('created_at', 'desc')->paginate(15);
+        return view('payments.resume', compact('title', 'transactions'));
+    }
+
 }

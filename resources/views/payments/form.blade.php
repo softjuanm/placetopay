@@ -64,7 +64,7 @@
                         <label for="bankCode">Entidad</label>
                         <select class="custom-select d-block w-100" id="bankCode" name="bankCode"required>
                             @foreach($banks as $bank)
-                            <option {{ $bank->bankCode == '0'? 'selected': '' }} value="{{ $bank->bankCode }}">{{ $bank->bankName }}</option>
+                            <option {{ $bank->bankCode == '1022'? 'selected': '' }} value="{{ $bank->bankCode }}">{{ $bank->bankName }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback">El tipo de documento es requerido.</div>                        
