@@ -28,5 +28,10 @@ Route::group(['as' => 'payment::', 'prefix' => 'payment'], function () {
         'as' => 'process',
         'uses' => 'Payments@process'
     ));
+    
+    Route::get('/result', array(
+        'as' => 'result',
+        'uses' => 'Payments@processResult'
+    ));
 
 });
